@@ -6,6 +6,11 @@ app = Flask(__name__)
 
 openai.api_key = os.environ.get('OPENAI_KEY')
 
+# Function to generate code from content
+def generate_code_from_content(language, content):
+    # Code generation logic goes here
+    code = f"{language} code generated from content: {content}"
+    return code
 
 @app.route('/')
 def index():
@@ -22,27 +27,15 @@ def chatgpt():
     )
     return completion['choices'][0]['message']['content']
 
-@app.route('/codegpt')
-def codegpt():
-    args = request.args
-    message = args.get("message")
 
-    # Check if the request is for generating code
+@app.route('/generate_code')
+def generate_code():
+    args = request.args
     if 'language' in args and 'content' in args:
         language = args.get('language')
         content = args.get('content')
         code = generate_code_from_content(language, content)
         return code
-
-    # If not, assume it's a chat message
-    completion = openai.Completion.create(
-        engine="text-davinci-002",
-        prompt=message,
-        max_tokens=1024,
-        n=1,
-        stop=None,
-        temperature=0.5,
-    )
-    message = completion.choices[0].text
-    return message
+    else:
+        return "Please provide both 'language' and 'content' parameters to generate code."
 
