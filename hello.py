@@ -27,7 +27,14 @@ def chatgpt():
     )
     return completion['choices'][0]['message']['content']
 
+@app.route('/generate_code')
+def generate_code():
+    language = request.args.get('language')
+    content = request.args.get('content')
+    code = generate_code_from_content(language, content)
+    return code
 
+'''
 @app.route('/generate_code')
 def generate_code():
     args = request.args
@@ -38,4 +45,5 @@ def generate_code():
         return code
     else:
         return "Please provide both 'language' and 'content' parameters to generate code."
+'''
 
